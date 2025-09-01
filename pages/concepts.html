@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concepts - API Docs Masterclass</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>=� API Concepts</h1>
+        <nav>
+            <ul>
+                <li><a href="../index.html"><� Home</a></li>
+                <li><a href="reference.html">=� Reference</a></li>
+                <li><a href="guides.html"><� Guides</a></li>
+                <li><a href="concepts.html">💡 Concepts</a></li>
+                <li><a href="best-practices.html">⭐ Best Practices</a></li>
+                <li><a href="case-studies.html">📊 Case Studies</a></li>
+                <li><a href="examples.html">=� Examples</a></li>
+                <li><a href="https://github.com/api-tech-writer/API-Docs-Masterclass" target="_blank">= GitHub</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Understanding API Architecture</h2>
+            <p>Deep dive into core concepts, patterns, and principles of modern APIs</p>
+        </section>
+
+        <!-- REST Architecture -->
+        <div class="card">
+            <h3>< RESTful API Architecture</h3>
+            
+            <h4>Core Principles</h4>
+            <ul>
+                <li><strong>Client-Server:</strong> Separation of concerns between UI and data storage</li>
+                <li><strong>Stateless:</strong> Each request contains all information needed to understand it</li>
+                <li><strong>Cacheable:</strong> Responses must define themselves as cacheable or not</li>
+                <li><strong>Uniform Interface:</strong> Standardized communication between components</li>
+                <li><strong>Layered System:</strong> Hierarchical layers with restricted component behavior</li>
+                <li><strong>Code on Demand:</strong> Optional ability to extend client functionality</li>
+            </ul>
+            
+            <h4>Resource-Based Design</h4>
+            <pre><code class="language-http">GET    /api/users          # Collection
+GET    /api/users/123      # Single resource
+POST   /api/users          # Create new
+PUT    /api/users/123      # Update (full)
+PATCH  /api/users/123      # Update (partial)
+DELETE /api/users/123      # Remove</code></pre>
+            
+            <h4>HTTP Status Codes</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Range</th>
+                        <th>Category</th>
+                        <th>Common Codes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2xx</td>
+                        <td>Success</td>
+                        <td>200 OK, 201 Created, 204 No Content</td>
+                    </tr>
+                    <tr>
+                        <td>3xx</td>
+                        <td>Redirection</td>
+                        <td>301 Moved, 304 Not Modified</td>
+                    </tr>
+                    <tr>
+                        <td>4xx</td>
+                        <td>Client Error</td>
+                        <td>400 Bad Request, 401 Unauthorized, 404 Not Found</td>
+                    </tr>
+                    <tr>
+                        <td>5xx</td>
+                        <td>Server Error</td>
+                        <td>500 Internal Error, 503 Service Unavailable</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- API Types Comparison -->
+        <div class="card">
+            <h3>= API Types Comparison</h3>
+            
+            <h4>REST vs GraphQL vs gRPC</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>REST</th>
+                        <th>GraphQL</th>
+                        <th>gRPC</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Protocol</td>
+                        <td>HTTP/HTTPS</td>
+                        <td>HTTP/HTTPS</td>
+                        <td>HTTP/2</td>
+                    </tr>
+                    <tr>
+                        <td>Data Format</td>
+                        <td>JSON, XML</td>
+                        <td>JSON</td>
+                        <td>Protocol Buffers</td>
+                    </tr>
+                    <tr>
+                        <td>Schema</td>
+                        <td>Optional (OpenAPI)</td>
+                        <td>Required</td>
+                        <td>Required (.proto)</td>
+                    </tr>
+                    <tr>
+                        <td>Best For</td>
+                        <td>Simple CRUD, Web APIs</td>
+                        <td>Complex queries, Mobile</td>
+                        <td>Microservices, Performance</td>
+                    </tr>
+                    <tr>
+                        <td>Learning Curve</td>
+                        <td>Low</td>
+                        <td>Medium</td>
+                        <td>High</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4>Example Implementations</h4>
+            
+            <h5>REST</h5>
+            <pre><code class="language-javascript">// REST: Multiple requests for related data
+const user = await fetch('/api/users/123');
+const posts = await fetch('/api/users/123/posts');
+const comments = await fetch('/api/users/123/comments');</code></pre>
+            
+            <h5>GraphQL</h5>
+            <pre><code class="language-graphql">// GraphQL: Single request for exactly what you need
+query {
+  user(id: 123) {
+    name
+    email
+    posts {
+      title
+      comments {
+        text
+      }
+    }
+  }
+}</code></pre>
+            
+            <h5>gRPC</h5>
+            <pre><code class="language-proto">// gRPC: Strongly typed service definition
+service UserService {
+  rpc GetUser(UserRequest) returns (User);
+  rpc StreamPosts(UserRequest) returns (stream Post);
+}</code></pre>
+        </div>
+
+        <!-- Authentication & Security -->
+        <div class="card">
+            <h3>= Authentication & Authorization</h3>
+            
+            <h4>Authentication Methods</h4>
+            
+            <div style="margin: 1rem 0;">
+                <h5>API Keys</h5>
+                <pre><code class="language-http">GET /api/weather
+Authorization: Bearer api_key_abc123def456</code></pre>
+                <p> Simple to implement | L Limited security | Use for: Public APIs, rate limiting</p>
+            </div>
+            
+            <div style="margin: 1rem 0;">
+                <h5>OAuth 2.0</h5>
+                <pre><code class="language-javascript">// Authorization Code Flow
+const authUrl = `${authEndpoint}?
+  response_type=code&
+  client_id=${clientId}&
+  redirect_uri=${redirectUri}&
+  scope=read:weather write:alerts`;
+  
+// Exchange code for token
+const token = await exchangeCodeForToken(authCode);</code></pre>
+                <p> Delegated authorization |  Industry standard | Use for: Third-party integrations</p>
+            </div>
+            
+            <div style="margin: 1rem 0;">
+                <h5>JWT (JSON Web Tokens)</h5>
+                <pre><code class="language-javascript">// JWT Structure: header.payload.signature
+const token = 'eyJhbGciOiJIUzI1NiIs...';
+
+// Decoded payload
+{
+  "sub": "user123",
+  "exp": 1609459200,
+  "scope": ["weather:read", "alerts:write"]
+}</code></pre>
+                <p> Stateless |  Self-contained | Use for: Microservices, mobile apps</p>
+            </div>
+        </div>
+
+        <!-- Rate Limiting Strategies -->
+        <div class="card">
+            <h3>� Rate Limiting Patterns</h3>
+            
+            <h4>Common Algorithms</h4>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Algorithm</th>
+                        <th>How it Works</th>
+                        <th>Pros</th>
+                        <th>Cons</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Token Bucket</strong></td>
+                        <td>Tokens refill at fixed rate</td>
+                        <td>Allows bursts</td>
+                        <td>Complex implementation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Leaky Bucket</strong></td>
+                        <td>Fixed output rate</td>
+                        <td>Smooth rate</td>
+                        <td>No burst handling</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fixed Window</strong></td>
+                        <td>Reset at intervals</td>
+                        <td>Simple</td>
+                        <td>Traffic spikes at reset</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sliding Window</strong></td>
+                        <td>Rolling time window</td>
+                        <td>Accurate</td>
+                        <td>Memory intensive</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4>Implementation Example</h4>
+            <pre><code class="language-python"># Token Bucket Algorithm
+class TokenBucket:
+    def __init__(self, capacity, refill_rate):
+        self.capacity = capacity
+        self.tokens = capacity
+        self.refill_rate = refill_rate
+        self.last_refill = time.time()
+    
+    def consume(self, tokens=1):
+        self.refill()
+        
+        if self.tokens >= tokens:
+            self.tokens -= tokens
+            return True
+        return False
+    
+    def refill(self):
+        now = time.time()
+        tokens_to_add = (now - self.last_refill) * self.refill_rate
+        self.tokens = min(self.capacity, self.tokens + tokens_to_add)
+        self.last_refill = now</code></pre>
+        </div>
+
+        <!-- API Versioning -->
+        <div class="card">
+            <h3>=� API Versioning Strategies</h3>
+            
+            <h4>Versioning Approaches</h4>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                <div>
+                    <h5>URI Versioning</h5>
+                    <pre><code class="language-http">GET /api/v1/weather
+GET /api/v2/weather</code></pre>
+                    <p> Clear and visible<br>L URL proliferation</p>
+                </div>
+                
+                <div>
+                    <h5>Header Versioning</h5>
+                    <pre><code class="language-http">GET /api/weather
+Accept: application/vnd.api+json;version=2</code></pre>
+                    <p> Clean URLs<br>L Less discoverable</p>
+                </div>
+                
+                <div>
+                    <h5>Query Parameter</h5>
+                    <pre><code class="language-http">GET /api/weather?version=2</code></pre>
+                    <p> Optional versioning<br>L Can be overlooked</p>
+                </div>
+            </div>
+            
+            <h4>Deprecation Strategy</h4>
+            <pre><code class="language-http">HTTP/1.1 200 OK
+Deprecation: true
+Sunset: Sat, 31 Dec 2025 23:59:59 GMT
+Link: &lt;https://api.example.com/v2/weather&gt;; rel="successor-version"
+
+{
+  "warning": "This version will be deprecated on Dec 31, 2025. Please migrate to v2."
+}</code></pre>
+        </div>
+
+        <!-- Webhooks Architecture -->
+        <div class="card">
+            <h3>= Webhook Architecture</h3>
+            
+            <h4>Event-Driven Design</h4>
+            <pre><code class="language-javascript">// Webhook Event Structure
+{
+  "id": "evt_1234567890",
+  "type": "weather.alert.created",
+  "created": "2025-01-01T12:00:00Z",
+  "data": {
+    "alert": {
+      "severity": "high",
+      "message": "Storm warning",
+      "affected_areas": ["NYC", "Boston"]
+    }
+  }
+}</code></pre>
+            
+            <h4>Security Best Practices</h4>
+            <ol>
+                <li><strong>Signature Verification:</strong> Validate webhook authenticity</li>
+                <li><strong>HTTPS Only:</strong> Encrypted communication</li>
+                <li><strong>Idempotency:</strong> Handle duplicate events</li>
+                <li><strong>Timeout Handling:</strong> Quick response (< 5s)</li>
+                <li><strong>Retry Logic:</strong> Exponential backoff</li>
+            </ol>
+            
+            <h4>Implementation Pattern</h4>
+            <pre><code class="language-python">@app.route('/webhook', methods=['POST'])
+def handle_webhook():
+    # 1. Verify signature
+    signature = request.headers.get('X-Webhook-Signature')
+    if not verify_signature(request.data, signature):
+        return jsonify({'error': 'Invalid signature'}), 401
+    
+    # 2. Parse event
+    event = request.json
+    
+    # 3. Check idempotency
+    if event_already_processed(event['id']):
+        return jsonify({'status': 'already_processed'}), 200
+    
+    # 4. Process asynchronously
+    queue_event_for_processing(event)
+    
+    # 5. Quick response
+    return jsonify({'status': 'accepted'}), 200</code></pre>
+        </div>
+
+        <!-- Caching Strategies -->
+        <div class="card">
+            <h3>=� Caching Strategies</h3>
+            
+            <h4>Cache Levels</h4>
+            <ul>
+                <li><strong>Browser Cache:</strong> Client-side, fastest</li>
+                <li><strong>CDN Cache:</strong> Edge locations, global</li>
+                <li><strong>Reverse Proxy:</strong> Server-side, shared</li>
+                <li><strong>Application Cache:</strong> In-memory, flexible</li>
+                <li><strong>Database Cache:</strong> Query results, persistent</li>
+            </ul>
+            
+            <h4>Cache Headers</h4>
+            <pre><code class="language-http">HTTP/1.1 200 OK
+Cache-Control: public, max-age=3600, s-maxage=7200
+ETag: "33a64df551425fcc55e4d42a148795d9f25f89d4"
+Last-Modified: Mon, 01 Jan 2025 00:00:00 GMT
+Vary: Accept-Encoding, Accept-Language</code></pre>
+            
+            <h4>Cache Invalidation Patterns</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pattern</th>
+                        <th>Description</th>
+                        <th>Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>TTL (Time to Live)</td>
+                        <td>Expire after fixed time</td>
+                        <td>Predictable data changes</td>
+                    </tr>
+                    <tr>
+                        <td>Event-Based</td>
+                        <td>Invalidate on update</td>
+                        <td>Real-time requirements</td>
+                    </tr>
+                    <tr>
+                        <td>Manual Purge</td>
+                        <td>Admin-triggered clear</td>
+                        <td>Emergency updates</td>
+                    </tr>
+                    <tr>
+                        <td>Tag-Based</td>
+                        <td>Group related items</td>
+                        <td>Complex dependencies</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Patterns -->
+        <div class="card">
+            <h3>=� Pagination Patterns</h3>
+            
+            <h4>Pagination Strategies</h4>
+            
+            <div style="margin: 1rem 0;">
+                <h5>Offset-Based</h5>
+                <pre><code class="language-http">GET /api/users?offset=20&limit=10
+
+{
+  "data": [...],
+  "pagination": {
+    "offset": 20,
+    "limit": 10,
+    "total": 100
+  }
+}</code></pre>
+                <p> Simple | L Inconsistent with inserts</p>
+            </div>
+            
+            <div style="margin: 1rem 0;">
+                <h5>Cursor-Based</h5>
+                <pre><code class="language-http">GET /api/users?cursor=eyJpZCI6MTIzfQ&limit=10
+
+{
+  "data": [...],
+  "pagination": {
+    "next_cursor": "eyJpZCI6MTMzfQ",
+    "has_more": true
+  }
+}</code></pre>
+                <p> Consistent |  Efficient | L No random access</p>
+            </div>
+            
+            <div style="margin: 1rem 0;">
+                <h5>Page-Based</h5>
+                <pre><code class="language-http">GET /api/users?page=3&per_page=10
+
+{
+  "data": [...],
+  "pagination": {
+    "page": 3,
+    "per_page": 10,
+    "total_pages": 10,
+    "total_items": 100
+  }
+}</code></pre>
+                <p> User-friendly | L Performance on large datasets</p>
+            </div>
+        </div>
+
+        <!-- Error Handling Philosophy -->
+        <div class="card">
+            <h3>L Error Handling Philosophy</h3>
+            
+            <h4>Error Response Structure</h4>
+            <pre><code class="language-json">{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "The request contains invalid parameters",
+    "details": [
+      {
+        "field": "temperature",
+        "issue": "Value must be between -273 and 100",
+        "location": "body"
+      }
+    ],
+    "help_url": "https://api.example.com/docs/errors#VALIDATION_ERROR",
+    "request_id": "req_abc123xyz"
+  },
+  "status": 400
+}</code></pre>
+            
+            <h4>Error Design Principles</h4>
+            <ul>
+                <li><strong>Consistent:</strong> Same structure across all errors</li>
+                <li><strong>Actionable:</strong> Clear guidance on resolution</li>
+                <li><strong>Secure:</strong> Don't leak sensitive information</li>
+                <li><strong>Traceable:</strong> Include request IDs for debugging</li>
+                <li><strong>Localized:</strong> Support multiple languages</li>
+            </ul>
+        </div>
+    </main>
+
+    <footer>
+        <p>� 2025 API Docs Masterclass | <a href="../index.html">Home</a> | <a href="https://github.com/api-tech-writer/API-Docs-Masterclass" target="_blank">GitHub</a></p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/http.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/graphql.min.js"></script>
+    <script src="../js/scripts.js"></script>
+</body>
+</html>
