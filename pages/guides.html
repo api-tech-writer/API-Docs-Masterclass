@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guides - API Docs Masterclass</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>🎯 Getting Started Guides</h1>
+        <nav>
+            <ul>
+                <li><a href="../index.html">🏠 Home</a></li>
+                <li><a href="reference.html">📖 Reference</a></li>
+                <li><a href="guides.html">🎯 Guides</a></li>
+                <li><a href="concepts.html">💡 Concepts</a></li>
+                <li><a href="best-practices.html">⭐ Best Practices</a></li>
+                <li><a href="case-studies.html">📊 Case Studies</a></li>
+                <li><a href="examples.html">💻 Examples</a></li>
+                <li><a href="https://github.com/api-tech-writer/API-Docs-Masterclass" target="_blank">🔗 GitHub</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Step-by-Step Tutorials</h2>
+            <p>Learn how to integrate with our API from zero to production</p>
+        </section>
+
+        <!-- Quick Start -->
+        <div class="card">
+            <h3>🚀 Quick Start - 5 Minutes to First Request</h3>
+            
+            <h4>Step 1: Sign Up for an API Key</h4>
+            <p>Visit <a href="https://dashboard.globalweather.com">dashboard.globalweather.com</a> to create your account and generate an API key.</p>
+            
+            <h4>Step 2: Set Up Your Environment</h4>
+            <pre><code class="language-bash"># Set your API key as an environment variable
+export WEATHER_API_KEY="your_api_key_here"
+
+# Or in .env file
+echo "WEATHER_API_KEY=your_api_key_here" >> .env</code></pre>
+            
+            <h4>Step 3: Make Your First Request</h4>
+            <pre><code class="language-bash">curl -X GET "https://api.globalweather.com/v1/weather/current?city=London" \
+  -H "Authorization: Bearer $WEATHER_API_KEY"</code></pre>
+            
+            <h4>Step 4: Parse the Response</h4>
+            <pre><code class="language-json">{
+  "location": {
+    "city": "London",
+    "country": "GB"
+  },
+  "current": {
+    "temperature": 15.5,
+    "weather": {
+      "description": "partly cloudy"
+    }
+  }
+}</code></pre>
+            
+            <div style="background: rgba(0, 255, 65, 0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                <strong>✅ Success!</strong> You've made your first API call. Now let's explore more advanced features.
+            </div>
+        </div>
+
+        <!-- Authentication Guide -->
+        <div class="card">
+            <h3>🔐 Authentication Deep Dive</h3>
+            
+            <h4>Authentication Methods</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Security Level</th>
+                        <th>Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>API Key (Header)</td>
+                        <td>⭐⭐⭐⭐</td>
+                        <td>Production (Recommended)</td>
+                    </tr>
+                    <tr>
+                        <td>API Key (Query)</td>
+                        <td>⭐⭐</td>
+                        <td>Quick Testing Only</td>
+                    </tr>
+                    <tr>
+                        <td>OAuth 2.0</td>
+                        <td>⭐⭐⭐⭐⭐</td>
+                        <td>User Authorization</td>
+                    </tr>
+                    <tr>
+                        <td>JWT</td>
+                        <td>⭐⭐⭐⭐⭐</td>
+                        <td>Server-to-Server</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4>Best Practices</h4>
+            <ul>
+                <li>✅ Always use HTTPS</li>
+                <li>✅ Store keys in environment variables</li>
+                <li>✅ Rotate keys regularly</li>
+                <li>✅ Use different keys for different environments</li>
+                <li>❌ Never commit keys to version control</li>
+                <li>❌ Never expose keys in client-side code</li>
+            </ul>
+            
+            <h4>Example: Secure Key Storage</h4>
+            <pre><code class="language-python"># Python example with environment variables
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Get API key securely
+API_KEY = os.getenv('WEATHER_API_KEY')
+
+if not API_KEY:
+    raise ValueError("API key not found in environment variables")
+
+# Use the key in requests
+headers = {
+    'Authorization': f'Bearer {API_KEY}'
+}</code></pre>
+        </div>
+
+        <!-- Error Handling -->
+        <div class="card">
+            <h3>⚠️ Error Handling Strategies</h3>
+            
+            <h4>Common Error Scenarios</h4>
+            
+            <div style="margin: 1rem 0;">
+                <h5>1. Rate Limit Exceeded (429)</h5>
+                <pre><code class="language-javascript">async function handleRateLimit(response) {
+    const retryAfter = response.headers.get('Retry-After') || 60;
+    console.log(`Rate limited. Retrying in ${retryAfter} seconds...`);
+    
+    await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
+    
+    // Retry the request
+    return fetch(response.url, {
+        headers: originalHeaders
+    });
+}</code></pre>
+            </div>
+            
+            <div style="margin: 1rem 0;">
+                <h5>2. Invalid Location (404)</h5>
+                <pre><code class="language-python">def handle_location_error(error_response):
+    error = error_response.json()
+    
+    if error['error']['code'] == 'INVALID_LOCATION':
+        # Try searching for the location first
+        suggestions = search_locations(error['error']['details']['city'])
+        
+        if suggestions:
+            print(f"Did you mean: {suggestions[0]['name']}?")
+            return get_weather(suggestions[0]['name'])
+    
+    raise Exception(f"Location not found: {error['error']['message']}")</code></pre>
+            </div>
+            
+            <h4>Retry Strategy with Exponential Backoff</h4>
+            <pre><code class="language-javascript">async function fetchWithRetry(url, options, maxRetries = 3) {
+    for (let i = 0; i < maxRetries; i++) {
+        try {
+            const response = await fetch(url, options);
+            
+            if (response.ok) {
+                return response;
+            }
+            
+            if (response.status === 429 || response.status >= 500) {
+                // Exponential backoff: 1s, 2s, 4s
+                const delay = Math.pow(2, i) * 1000;
+                await new Promise(r => setTimeout(r, delay));
+                continue;
+            }
+            
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            
+        } catch (error) {
+            if (i === maxRetries - 1) throw error;
+        }
+    }
+}</code></pre>
+        </div>
+
+        <!-- Webhooks Implementation -->
+        <div class="card">
+            <h3>🔔 Implementing Webhooks</h3>
+            
+            <h4>Step 1: Create Webhook Endpoint</h4>
+            <pre><code class="language-python"># Flask webhook endpoint
+from flask import Flask, request, jsonify
+import hmac
+import hashlib
+
+app = Flask(__name__)
+WEBHOOK_SECRET = 'your_webhook_secret'
+
+@app.route('/webhooks/weather', methods=['POST'])
+def handle_webhook():
+    # Verify signature
+    signature = request.headers.get('X-Webhook-Signature')
+    if not verify_signature(request.data, signature):
+        return jsonify({'error': 'Invalid signature'}), 401
+    
+    # Process event
+    event = request.json
+    
+    if event['event'] == 'weather.alert.created':
+        handle_weather_alert(event['data'])
+    
+    return jsonify({'status': 'received'}), 200
+
+def verify_signature(payload, signature):
+    expected = hmac.new(
+        WEBHOOK_SECRET.encode(),
+        payload,
+        hashlib.sha256
+    ).hexdigest()
+    
+    return hmac.compare_digest(expected, signature)</code></pre>
+            
+            <h4>Step 2: Register Webhook</h4>
+            <pre><code class="language-bash">curl -X POST "https://api.globalweather.com/v1/webhooks" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://your-app.com/webhooks/weather",
+    "events": ["weather.alert.created", "weather.threshold.exceeded"],
+    "secret": "your_webhook_secret"
+  }'</code></pre>
+            
+            <h4>Webhook Events</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Description</th>
+                        <th>Payload</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>weather.alert.created</code></td>
+                        <td>New weather alert issued</td>
+                        <td>Alert details, affected areas</td>
+                    </tr>
+                    <tr>
+                        <td><code>weather.threshold.exceeded</code></td>
+                        <td>Custom threshold exceeded</td>
+                        <td>Threshold details, measurements</td>
+                    </tr>
+                    <tr>
+                        <td><code>weather.conditions.changed</code></td>
+                        <td>Significant weather change</td>
+                        <td>Previous and current conditions</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Best Practices Checklist -->
+        <div class="card">
+            <h3>✅ Production Checklist</h3>
+            
+            <h4>Before Going Live</h4>
+            <ul style="line-height: 2;">
+                <li>☐ Implement proper error handling</li>
+                <li>☐ Add request retry logic</li>
+                <li>☐ Set up monitoring and logging</li>
+                <li>☐ Cache responses when appropriate</li>
+                <li>☐ Use connection pooling</li>
+                <li>☐ Implement rate limiting on your side</li>
+                <li>☐ Store API keys securely</li>
+                <li>☐ Set up webhook endpoints (if needed)</li>
+                <li>☐ Test with production-like data volumes</li>
+                <li>☐ Plan for API version updates</li>
+            </ul>
+            
+            <h4>Monitoring Recommendations</h4>
+            <pre><code class="language-python"># Example monitoring setup
+import logging
+from datetime import datetime
+
+class APIMonitor:
+    def __init__(self):
+        self.logger = logging.getLogger('weather_api')
+        self.metrics = {
+            'requests': 0,
+            'errors': 0,
+            'latency': []
+        }
+    
+    def log_request(self, endpoint, duration, status):
+        self.metrics['requests'] += 1
+        self.metrics['latency'].append(duration)
+        
+        if status >= 400:
+            self.metrics['errors'] += 1
+            self.logger.error(f"API Error: {endpoint} returned {status}")
+        
+        # Alert if error rate > 5%
+        error_rate = self.metrics['errors'] / self.metrics['requests']
+        if error_rate > 0.05:
+            self.send_alert("High API error rate detected")
+    
+    def get_average_latency(self):
+        return sum(self.metrics['latency']) / len(self.metrics['latency'])</code></pre>
+        </div>
+
+        <!-- Migration Guide -->
+        <div class="card">
+            <h3>🔄 Migration from Other APIs</h3>
+            
+            <h4>Common Migration Patterns</h4>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Old API</th>
+                        <th>Our API</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>/api/weather?q=London</code></td>
+                        <td><code>/weather/current?city=London</code></td>
+                        <td>Parameter name change</td>
+                    </tr>
+                    <tr>
+                        <td><code>X-API-Key: key</code></td>
+                        <td><code>Authorization: Bearer key</code></td>
+                        <td>Header format change</td>
+                    </tr>
+                    <tr>
+                        <td>XML Response</td>
+                        <td>JSON Response</td>
+                        <td>Format modernization</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4>Migration Script Example</h4>
+            <pre><code class="language-javascript">// Adapter pattern for smooth migration
+class WeatherAPIAdapter {
+    constructor(oldClient, newClient) {
+        this.oldClient = oldClient;
+        this.newClient = newClient;
+        this.migrationDate = new Date('2025-03-01');
+    }
+    
+    async getWeather(city) {
+        // Gradual migration based on date
+        if (new Date() < this.migrationDate) {
+            // Still use old API
+            return this.oldClient.getWeather(city);
+        } else {
+            // Use new API with format conversion
+            const newData = await this.newClient.getCurrentWeather(city);
+            return this.convertToOldFormat(newData);
+        }
+    }
+    
+    convertToOldFormat(newData) {
+        // Map new format to old format for compatibility
+        return {
+            location: newData.location.city,
+            temp: newData.current.temperature,
+            // ... other mappings
+        };
+    }
+}</code></pre>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2025 API Docs Masterclass | <a href="../index.html">Home</a> | <a href="https://github.com/api-tech-writer/API-Docs-Masterclass" target="_blank">GitHub</a></p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+    <script src="../js/scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,479 @@
+/* API Docs Masterclass - Dev Theme CSS */
+:root {
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-code: #1e1e1e;
+  --text-primary: #c9d1d9;
+  --text-secondary: #8b949e;
+  --neon-green: #00ff41;
+  --neon-blue: #00d9ff;
+  --neon-purple: #bd00ff;
+  --border: #30363d;
+  --shadow-glow: 0 0 20px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+  color: var(--text-primary);
+  font-family: 'Source Code Pro', 'Courier New', monospace;
+  line-height: 1.6;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Animated background particles */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(0, 255, 65, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 217, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(189, 0, 255, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+  animation: float 20s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(-20px, -20px) rotate(1deg); }
+  66% { transform: translate(20px, -10px) rotate(-1deg); }
+}
+
+/* Header */
+header {
+  background: rgba(13, 17, 23, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-bottom: 2px solid var(--neon-green);
+  box-shadow: 0 4px 20px rgba(0, 255, 65, 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+h1 {
+  color: var(--neon-green);
+  text-align: center;
+  font-size: 2.5rem;
+  text-shadow: 
+    0 0 10px var(--neon-green),
+    0 0 20px var(--neon-green),
+    0 0 30px var(--neon-green);
+  letter-spacing: 2px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+/* Navigation */
+nav {
+  margin-top: 1.5rem;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+nav li {
+  position: relative;
+}
+
+nav a {
+  color: var(--text-primary);
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: block;
+  background: rgba(22, 27, 34, 0.8);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+nav a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--neon-green), transparent);
+  transition: left 0.5s ease;
+}
+
+nav a:hover::before {
+  left: 100%;
+}
+
+nav a:hover {
+  color: var(--neon-green);
+  border-color: var(--neon-green);
+  box-shadow: 
+    0 0 10px var(--neon-green),
+    inset 0 0 10px rgba(0, 255, 65, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Main Content */
+main, section {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: rgba(22, 27, 34, 0.6);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  margin-bottom: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    transparent,
+    var(--neon-blue),
+    transparent,
+    var(--neon-purple),
+    transparent
+  );
+  animation: rotate 10s linear infinite;
+  opacity: 0.1;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.hero h2 {
+  color: var(--neon-blue);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 10px var(--neon-blue);
+  position: relative;
+  z-index: 1;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  position: relative;
+  z-index: 1;
+}
+
+/* Cards */
+.card {
+  background: rgba(22, 27, 34, 0.8);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--neon-green), var(--neon-blue));
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
+.card:hover::before {
+  transform: scaleY(1);
+}
+
+.card:hover {
+  transform: translateX(10px);
+  box-shadow: 0 10px 30px rgba(0, 255, 65, 0.2);
+}
+
+.card h3 {
+  color: var(--neon-green);
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+/* Code Blocks */
+pre {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+  position: relative;
+  font-size: 0.9rem;
+}
+
+pre::before {
+  content: '</>';
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  color: var(--neon-purple);
+  opacity: 0.3;
+  font-size: 0.8rem;
+}
+
+code {
+  font-family: 'Source Code Pro', monospace;
+  background: rgba(0, 255, 65, 0.1);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  color: var(--neon-green);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  background: rgba(22, 27, 34, 0.6);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th {
+  background: rgba(0, 255, 65, 0.1);
+  color: var(--neon-green);
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 2px solid var(--neon-green);
+}
+
+td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+tr:hover {
+  background: rgba(0, 255, 65, 0.05);
+}
+
+/* Links */
+a {
+  color: var(--neon-blue);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+a:hover {
+  color: var(--neon-green);
+  text-shadow: 0 0 5px currentColor;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background: linear-gradient(135deg, var(--neon-green), var(--neon-blue));
+  color: var(--bg-primary);
+  border-radius: 50px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(0, 255, 65, 0.6);
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem;
+  border-top: 1px solid var(--border);
+  margin-top: 4rem;
+  color: var(--text-secondary);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--neon-green), var(--neon-blue));
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--neon-blue), var(--neon-purple));
+}
+
+/* Loading Animation */
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid var(--border);
+  border-radius: 50%;
+  border-top-color: var(--neon-green);
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.8rem;
+  }
+  
+  nav ul {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  nav a {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .hero {
+    padding: 2rem 1rem;
+  }
+  
+  .card {
+    padding: 1.5rem;
+  }
+  
+  main, section {
+    padding: 1rem;
+  }
+  
+  pre {
+    padding: 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Syntax Highlighting Override */
+.hljs {
+  background: var(--bg-code) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+  
+  header, nav, footer {
+    display: none;
+  }
+  
+  .card {
+    break-inside: avoid;
+  }
+}

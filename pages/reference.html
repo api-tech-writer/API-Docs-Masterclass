@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Reference - API Docs Masterclass</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>📖 API Reference Documentation</h1>
+        <nav>
+            <ul>
+                <li><a href="../index.html">🏠 Home</a></li>
+                <li><a href="reference.html">📖 Reference</a></li>
+                <li><a href="guides.html">🎯 Guides</a></li>
+                <li><a href="concepts.html">💡 Concepts</a></li>
+                <li><a href="best-practices.html">⭐ Best Practices</a></li>
+                <li><a href="case-studies.html">📊 Case Studies</a></li>
+                <li><a href="examples.html">💻 Examples</a></li>
+                <li><a href="https://github.com/api-tech-writer/API-Docs-Masterclass" target="_blank">🔗 GitHub</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Complete API Reference</h2>
+            <p>Comprehensive documentation for all endpoints, parameters, and responses</p>
+        </section>
+
+        <!-- Base URL Section -->
+        <div class="card">
+            <h3>🌐 Base URL</h3>
+            <pre><code class="language-http">https://api.globalweather.com/v1</code></pre>
+            <p>All API requests must be made to this base URL using HTTPS.</p>
+        </div>
+
+        <!-- Authentication Section -->
+        <div class="card">
+            <h3>🔐 Authentication</h3>
+            <p>All API requests require authentication using an API key in the header:</p>
+            <pre><code class="language-http">Authorization: Bearer YOUR_API_KEY</code></pre>
+            
+            <h4>Example Request with Authentication:</h4>
+            <pre><code class="language-bash">curl -X GET "https://api.globalweather.com/v1/weather/current?city=London" \
+  -H "Authorization: Bearer gw_live_abc123def456" \
+  -H "Accept: application/json"</code></pre>
+        </div>
+
+        <!-- Current Weather Endpoint -->
+        <div class="card">
+            <h3>☀️ GET /weather/current</h3>
+            <p>Returns current weather conditions for a specified location.</p>
+            
+            <h4>Parameters</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>In</th>
+                        <th>Required</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>city</code></td>
+                        <td>string</td>
+                        <td>query</td>
+                        <td>No*</td>
+                        <td>City name (e.g., "London")</td>
+                    </tr>
+                    <tr>
+                        <td><code>lat</code></td>
+                        <td>float</td>
+                        <td>query</td>
+                        <td>No*</td>
+                        <td>Latitude coordinate (-90 to 90)</td>
+                    </tr>
+                    <tr>
+                        <td><code>lon</code></td>
+                        <td>float</td>
+                        <td>query</td>
+                        <td>No*</td>
+                        <td>Longitude coordinate (-180 to 180)</td>
+                    </tr>
+                    <tr>
+                        <td><code>units</code></td>
+                        <td>string</td>
+                        <td>query</td>
+                        <td>No</td>
+                        <td>Temperature units: metric (default), imperial, kelvin</td>
+                    </tr>
+                    <tr>
+                        <td><code>lang</code></td>
+                        <td>string</td>
+                        <td>query</td>
+                        <td>No</td>
+                        <td>Language code (ISO 639-1)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><em>* Either city or both lat and lon are required</em></p>
+            
+            <h4>Request Example</h4>
+            <pre><code class="language-bash">curl -X GET "https://api.globalweather.com/v1/weather/current?city=Paris&units=metric" \
+  -H "Authorization: Bearer YOUR_API_KEY"</code></pre>
+            
+            <h4>Response Example</h4>
+            <pre><code class="language-json">{
+  "location": {
+    "city": "Paris",
+    "country": "FR",
+    "coordinates": {
+      "lat": 48.8566,
+      "lon": 2.3522
+    },
+    "timezone": "Europe/Paris"
+  },
+  "current": {
+    "timestamp": "2025-01-01T12:00:00Z",
+    "temperature": 15.5,
+    "feels_like": 14.2,
+    "humidity": 72,
+    "pressure": 1013,
+    "visibility": 10000,
+    "wind": {
+      "speed": 5.2,
+      "direction": 230,
+      "gust": 8.1
+    },
+    "weather": {
+      "id": 802,
+      "main": "Clouds",
+      "description": "scattered clouds",
+      "icon": "03d"
+    },
+    "uv_index": 3
+  }
+}</code></pre>
+            
+            <h4>Error Responses</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Status Code</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>400</code></td>
+                        <td>Bad Request - Invalid parameters</td>
+                    </tr>
+                    <tr>
+                        <td><code>401</code></td>
+                        <td>Unauthorized - Invalid or missing API key</td>
+                    </tr>
+                    <tr>
+                        <td><code>404</code></td>
+                        <td>Not Found - Location not found</td>
+                    </tr>
+                    <tr>
+                        <td><code>429</code></td>
+                        <td>Too Many Requests - Rate limit exceeded</td>
+                    </tr>
+                    <tr>
+                        <td><code>500</code></td>
+                        <td>Internal Server Error</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Weather Forecast Endpoint -->
+        <div class="card">
+            <h3>📅 GET /weather/forecast</h3>
+            <p>Returns weather forecast for up to 7 days.</p>
+            
+            <h4>Parameters</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Required</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>city</code></td>
+                        <td>string</td>
+                        <td>No*</td>
+                        <td>City name</td>
+                    </tr>
+                    <tr>
+                        <td><code>days</code></td>
+                        <td>integer</td>
+                        <td>No</td>
+                        <td>Number of days (1-7, default: 5)</td>
+                    </tr>
+                    <tr>
+                        <td><code>units</code></td>
+                        <td>string</td>
+                        <td>No</td>
+                        <td>Temperature units</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4>Request Example</h4>
+            <pre><code class="language-bash">curl -X GET "https://api.globalweather.com/v1/weather/forecast?city=Tokyo&days=3" \
+  -H "Authorization: Bearer YOUR_API_KEY"</code></pre>
+            
+            <h4>Response Example</h4>
+            <pre><code class="language-json">{
+  "location": {
+    "city": "Tokyo",
+    "country": "JP"
+  },
+  "forecast": [
+    {
+      "date": "2025-01-02",
+      "temperature": {
+        "min": 8.2,
+        "max": 14.5,
+        "morning": 9.1,
+        "day": 13.8,
+        "evening": 11.2,
+        "night": 8.5
+      },
+      "weather": {
+        "main": "Clear",
+        "description": "clear sky",
+        "icon": "01d"
+      },
+      "precipitation": {
+        "probability": 0,
+        "volume": 0
+      }
+    }
+  ]
+}</code></pre>
+        </div>
+
+        <!-- Weather Alerts Endpoint -->
+        <div class="card">
+            <h3>⚠️ GET /weather/alerts</h3>
+            <p>Get active weather alerts for a location.</p>
+            
+            <h4>Parameters</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>city</code></td>
+                        <td>string</td>
+                        <td>City name</td>
+                    </tr>
+                    <tr>
+                        <td><code>severity</code></td>
+                        <td>string</td>
+                        <td>Filter by severity: minor, moderate, severe, extreme</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4>Response Example</h4>
+            <pre><code class="language-json">{
+  "location": {
+    "city": "Miami",
+    "country": "US"
+  },
+  "alerts": [
+    {
+      "id": "NWS-2025-001",
+      "type": "hurricane_warning",
+      "severity": "severe",
+      "title": "Hurricane Warning",
+      "description": "Hurricane warning in effect",
+      "start": "2025-01-02T18:00:00Z",
+      "end": "2025-01-03T16:00:00Z",
+      "areas": ["Miami-Dade County"],
+      "source": "National Weather Service"
+    }
+  ],
+  "count": 1
+}</code></pre>
+        </div>
+
+        <!-- Rate Limiting -->
+        <div class="card">
+            <h3>⏱️ Rate Limiting</h3>
+            <p>API requests are rate limited based on your subscription plan:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Plan</th>
+                        <th>Requests per Hour</th>
+                        <th>Requests per Day</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Free</td>
+                        <td>60</td>
+                        <td>1,000</td>
+                        <td>$0</td>
+                    </tr>
+                    <tr>
+                        <td>Basic</td>
+                        <td>600</td>
+                        <td>10,000</td>
+                        <td>$29/mo</td>
+                    </tr>
+                    <tr>
+                        <td>Pro</td>
+                        <td>3,600</td>
+                        <td>100,000</td>
+                        <td>$99/mo</td>
+                    </tr>
+                    <tr>
+                        <td>Enterprise</td>
+                        <td>Unlimited</td>
+                        <td>Unlimited</td>
+                        <td>Custom</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4>Rate Limit Headers</h4>
+            <pre><code class="language-http">X-RateLimit-Limit: 60
+X-RateLimit-Remaining: 45
+X-RateLimit-Reset: 1609459200</code></pre>
+        </div>
+
+        <!-- Error Handling -->
+        <div class="card">
+            <h3>❌ Error Handling</h3>
+            <p>All errors return a consistent JSON structure:</p>
+            
+            <pre><code class="language-json">{
+  "error": {
+    "code": "INVALID_LOCATION",
+    "message": "The specified location could not be found",
+    "details": {
+      "city": "InvalidCity",
+      "suggestion": "Please check the spelling or try searching first"
+    }
+  },
+  "timestamp": "2025-01-01T12:00:00Z",
+  "request_id": "req_abc123"
+}</code></pre>
+            
+            <h4>Common Error Codes</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Description</th>
+                        <th>Resolution</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>INVALID_API_KEY</code></td>
+                        <td>API key is invalid or expired</td>
+                        <td>Check your API key</td>
+                    </tr>
+                    <tr>
+                        <td><code>RATE_LIMIT_EXCEEDED</code></td>
+                        <td>Too many requests</td>
+                        <td>Wait before retrying</td>
+                    </tr>
+                    <tr>
+                        <td><code>INVALID_LOCATION</code></td>
+                        <td>Location not found</td>
+                        <td>Verify location name</td>
+                    </tr>
+                    <tr>
+                        <td><code>SERVICE_UNAVAILABLE</code></td>
+                        <td>Temporary service issue</td>
+                        <td>Retry with exponential backoff</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SDKs -->
+        <div class="card">
+            <h3>📦 SDKs and Libraries</h3>
+            <p>Official SDKs are available for multiple programming languages:</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                <div>
+                    <h4>Python</h4>
+                    <pre><code class="language-bash">pip install globalweather</code></pre>
+                </div>
+                <div>
+                    <h4>JavaScript/Node.js</h4>
+                    <pre><code class="language-bash">npm install @globalweather/sdk</code></pre>
+                </div>
+                <div>
+                    <h4>Java</h4>
+                    <pre><code class="language-xml">&lt;dependency&gt;
+  &lt;groupId&gt;com.globalweather&lt;/groupId&gt;
+  &lt;artifactId&gt;sdk&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+                </div>
+                <div>
+                    <h4>Go</h4>
+                    <pre><code class="language-bash">go get github.com/globalweather/go-sdk</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive API Tester -->
+        <div class="card">
+            <h3>🧪 Try It Out</h3>
+            <p>Test the API directly from your browser:</p>
+            
+            <div style="margin: 1rem 0;">
+                <select id="endpoint-select" style="padding: 0.5rem; background: var(--bg-code); color: var(--text-primary); border: 1px solid var(--border);">
+                    <option value="/weather/current">Current Weather</option>
+                    <option value="/weather/forecast">Weather Forecast</option>
+                </select>
+                <button onclick="simulateAPIRequest(document.getElementById('endpoint-select').value)" class="btn" style="margin-left: 1rem;">
+                    Send Request
+                </button>
+            </div>
+            
+            <div id="api-output" style="margin-top: 1rem;"></div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2025 API Docs Masterclass | <a href="../index.html">Home</a> | <a href="https://github.com/api-tech-writer/API-Docs-Masterclass" target="_blank">GitHub</a></p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/http.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/xml.min.js"></script>
+    <script src="../js/scripts.js"></script>
+</body>
+</html>

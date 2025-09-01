@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Examples - API Docs Masterclass</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>💻 Code Examples</h1>
+        <nav>
+            <ul>
+                <li><a href="../index.html">🏠 Home</a></li>
+                <li><a href="reference.html">📖 Reference</a></li>
+                <li><a href="guides.html">🎯 Guides</a></li>
+                <li><a href="concepts.html">💡 Concepts</a></li>
+                <li><a href="best-practices.html">⭐ Best Practices</a></li>
+                <li><a href="case-studies.html">📊 Case Studies</a></li>
+                <li><a href="examples.html">💻 Examples</a></li>
+                <li><a href="https://github.com/api-tech-writer/API-Docs-Masterclass" target="_blank">🔗 GitHub</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Production-Ready Code Examples</h2>
+            <p>Complete, tested code samples in multiple programming languages</p>
+        </section>
+
+        <!-- Python Examples -->
+        <div class="card">
+            <h3>🐍 Python Examples</h3>
+            
+            <h4>Complete Client Implementation</h4>
+            <pre><code class="language-python">#!/usr/bin/env python3
+"""
+Global Weather API Python Client
+Full-featured client with caching, retries, and error handling
+"""
+
+import os
+import time
+import requests
+from typing import Dict, Optional
+from functools import lru_cache
+import backoff
+
+class WeatherClient:
+    def __init__(self, api_key: str):
+        self.api_key = api_key
+        self.base_url = "https://api.globalweather.com/v1"
+        self.session = requests.Session()
+        self.session.headers.update({
+            'Authorization': f'Bearer {api_key}',
+            'Content-Type': 'application/json'
+        })
+    
+    @backoff.on_exception(
+        backoff.expo,
+        requests.exceptions.RequestException,
+        max_tries=3
+    )
+    @lru_cache(maxsize=100)
+    def get_current_weather(self, city: str) -> Dict:
+        """Get current weather with caching and retry logic"""
+        response = self.session.get(
+            f"{self.base_url}/weather/current",
+            params={'city': city}
+        )
+        response.raise_for_status()
+        return response.json()
+    
+    def get_forecast(self, city: str, days: int = 5) -> Dict:
+        """Get weather forecast"""
+        response = self.session.get(
+            f"{self.base_url}/weather/forecast",
+            params={'city': city, 'days': days}
+        )
+        response.raise_for_status()
+        return response.json()
+
+# Usage example
+if __name__ == "__main__":
+    client = WeatherClient(os.getenv('WEATHER_API_KEY'))
+    
+    # Get current weather
+    weather = client.get_current_weather('London')
+    print(f"Temperature: {weather['current']['temperature']}°C")
+    print(f"Conditions: {weather['current']['weather']['description']}")
+    
+    # Get forecast
+    forecast = client.get_forecast('London', days=3)
+    for day in forecast['forecast']:
+        print(f"{day['date']}: {day['temperature']['min']}°C - {day['temperature']['max']}°C")</code></pre>
+            
+            <h4>Async Implementation with aiohttp</h4>
+            <pre><code class="language-python">import asyncio
+import aiohttp
+from typing import List, Dict
+
+class AsyncWeatherClient:
+    def __init__(self, api_key: str):
+        self.api_key = api_key
+        self.base_url = "https://api.globalweather.com/v1"
+    
+    async def __aenter__(self):
+        self.session = aiohttp.ClientSession(
+            headers={'Authorization': f'Bearer {self.api_key}'}
+        )
+        return self
+    
+    async def __aexit__(self, *args):
+        await self.session.close()
+    
+    async def get_weather_batch(self, cities: List[str]) -> Dict[str, Dict]:
+        """Get weather for multiple cities concurrently"""
+        tasks = [self._get_weather(city) for city in cities]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        
+        return {
+            city: result for city, result in zip(cities, results)
+            if not isinstance(result, Exception)
+        }
+    
+    async def _get_weather(self, city: str) -> Dict:
+        async with self.session.get(
+            f"{self.base_url}/weather/current",
+            params={'city': city}
+        ) as response:
+            return await response.json()
+
+# Usage
+async def main():
+    async with AsyncWeatherClient('your_api_key') as client:
+        cities = ['London', 'Paris', 'Tokyo', 'New York']
+        weather_data = await client.get_weather_batch(cities)
+        
+        for city, weather in weather_data.items():
+            print(f"{city}: {weather['current']['temperature']}°C")
+
+# Run: asyncio.run(main())</code></pre>
+        </div>
+
+        <!-- JavaScript Examples -->
+        <div class="card">
+            <h3>🟨 JavaScript/Node.js Examples</h3>
+            
+            <h4>Modern ES6+ Client with Promises</h4>
+            <pre><code class="language-javascript">class WeatherClient {
+    constructor(apiKey) {
+        this.apiKey = apiKey;
+        this.baseURL = 'https://api.globalweather.com/v1';
+        this.cache = new Map();
+    }
+    
+    async request(endpoint, params = {}) {
+        const url = new URL(`${this.baseURL}${endpoint}`);
+        Object.keys(params).forEach(key => 
+            url.searchParams.append(key, params[key])
+        );
+        
+        // Check cache
+        const cacheKey = url.toString();
+        if (this.cache.has(cacheKey)) {
+            const cached = this.cache.get(cacheKey);
+            if (Date.now() - cached.timestamp < 300000) { // 5 min cache
+                return cached.data;
+            }
+        }
+        
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${this.apiKey}`,
+                'Accept': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`API Error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Cache the result
+        this.cache.set(cacheKey, {
+            data,
+            timestamp: Date.now()
+        });
+        
+        return data;
+    }
+    
+    getCurrentWeather(city) {
+        return this.request('/weather/current', { city });
+    }
+    
+    getForecast(city, days = 5) {
+        return this.request('/weather/forecast', { city, days });
+    }
+}
+
+// Usage
+const client = new WeatherClient('your_api_key');
+
+// With async/await
+(async () => {
+    try {
+        const weather = await client.getCurrentWeather('London');
+        console.log(`Temperature: ${weather.current.temperature}°C`);
+        
+        const forecast = await client.getForecast('London', 3);
+        forecast.forecast.forEach(day => {
+            console.log(`${day.date}: ${day.weather.description}`);
+        });
+    } catch (error) {
+        console.error('Error:', error);
+    }
+})();</code></pre>
+            
+            <h4>React Hook Example</h4>
+            <pre><code class="language-javascript">import { useState, useEffect } from 'react';
+
+// Custom React Hook for Weather Data
+function useWeather(city) {
+    const [weather, setWeather] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    
+    useEffect(() => {
+        if (!city) return;
+        
+        const fetchWeather = async () => {
+            setLoading(true);
+            setError(null);
+            
+            try {
+                const response = await fetch(
+                    `https://api.globalweather.com/v1/weather/current?city=${city}`,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${process.env.REACT_APP_API_KEY}`
+                        }
+                    }
+                );
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch weather');
+                }
+                
+                const data = await response.json();
+                setWeather(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        
+        fetchWeather();
+    }, [city]);
+    
+    return { weather, loading, error };
+}
+
+// Component using the hook
+function WeatherDisplay({ city }) {
+    const { weather, loading, error } = useWeather(city);
+    
+    if (loading) return &lt;div&gt;Loading...&lt;/div&gt;;
+    if (error) return &lt;div&gt;Error: {error}&lt;/div&gt;;
+    if (!weather) return null;
+    
+    return (
+        &lt;div className="weather-card"&gt;
+            &lt;h2&gt;{weather.location.city}&lt;/h2&gt;
+            &lt;p&gt;Temperature: {weather.current.temperature}°C&lt;/p&gt;
+            &lt;p&gt;{weather.current.weather.description}&lt;/p&gt;
+        &lt;/div&gt;
+    );
+}</code></pre>
+        </div>
+
+        <!-- Go Examples -->
+        <div class="card">
+            <h3>🔵 Go Examples</h3>
+            
+            <h4>Go Client with Structs</h4>
+            <pre><code class="language-go">package main
+
+import (
+    "encoding/json"
+    "fmt"
+    "net/http"
+    "time"
+)
+
+type WeatherClient struct {
+    APIKey  string
+    BaseURL string
+    Client  *http.Client
+}
+
+type CurrentWeather struct {
+    Location struct {
+        City    string `json:"city"`
+        Country string `json:"country"`
+    } `json:"location"`
+    Current struct {
+        Temperature float64 `json:"temperature"`
+        Weather struct {
+            Description string `json:"description"`
+        } `json:"weather"`
+    } `json:"current"`
+}
+
+func NewWeatherClient(apiKey string) *WeatherClient {
+    return &WeatherClient{
+        APIKey:  apiKey,
+        BaseURL: "https://api.globalweather.com/v1",
+        Client: &http.Client{
+            Timeout: 10 * time.Second,
+        },
+    }
+}
+
+func (w *WeatherClient) GetCurrentWeather(city string) (*CurrentWeather, error) {
+    url := fmt.Sprintf("%s/weather/current?city=%s", w.BaseURL, city)
+    
+    req, err := http.NewRequest("GET", url, nil)
+    if err != nil {
+        return nil, err
+    }
+    
+    req.Header.Set("Authorization", "Bearer "+w.APIKey)
+    req.Header.Set("Accept", "application/json")
+    
+    resp, err := w.Client.Do(req)
+    if err != nil {
+        return nil, err
+    }
+    defer resp.Body.Close()
+    
+    if resp.StatusCode != http.StatusOK {
+        return nil, fmt.Errorf("API error: %d", resp.StatusCode)
+    }
+    
+    var weather CurrentWeather
+    if err := json.NewDecoder(resp.Body).Decode(&weather); err != nil {
+        return nil, err
+    }
+    
+    return &weather, nil
+}
+
+func main() {
+    client := NewWeatherClient("your_api_key")
+    
+    weather, err := client.GetCurrentWeather("London")
+    if err != nil {
+        panic(err)
+    }
+    
+    fmt.Printf("Temperature in %s: %.1f°C\n", 
+        weather.Location.City, 
+        weather.Current.Temperature)
+    fmt.Printf("Conditions: %s\n", 
+        weather.Current.Weather.Description)
+}</code></pre>
+        </div>
+
+        <!-- cURL Examples -->
+        <div class="card">
+            <h3>🔧 cURL Examples</h3>
+            
+            <h4>Common cURL Commands</h4>
+            <pre><code class="language-bash"># Basic GET request
+curl -X GET "https://api.globalweather.com/v1/weather/current?city=London" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+
+# Pretty print JSON response
+curl -X GET "https://api.globalweather.com/v1/weather/current?city=London" \
+  -H "Authorization: Bearer YOUR_API_KEY" | python -m json.tool
+
+# Save response to file
+curl -X GET "https://api.globalweather.com/v1/weather/current?city=London" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -o weather.json
+
+# POST request for webhook
+curl -X POST "https://api.globalweather.com/v1/webhooks" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://your-app.com/webhook",
+    "events": ["weather.alert.created"]
+  }'
+
+# With verbose output for debugging
+curl -v -X GET "https://api.globalweather.com/v1/weather/current?city=London" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+
+# Extract specific field with jq
+curl -s -X GET "https://api.globalweather.com/v1/weather/current?city=London" \
+  -H "Authorization: Bearer YOUR_API_KEY" | jq '.current.temperature'</code></pre>
+        </div>
+
+        <!-- Complete Application Example -->
+        <div class="card">
+            <h3>🚀 Complete Application Example</h3>
+            
+            <h4>Weather Dashboard Backend (Node.js + Express)</h4>
+            <pre><code class="language-javascript">const express = require('express');
+const cors = require('cors');
+const rateLimit = require('express-rate-limit');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Rate limiting
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // limit each IP to 100 requests per windowMs
+});
+app.use('/api/', limiter);
+
+// Weather client
+const weatherClient = new WeatherClient(process.env.WEATHER_API_KEY);
+
+// Routes
+app.get('/api/weather/current/:city', async (req, res) => {
+    try {
+        const weather = await weatherClient.getCurrentWeather(req.params.city);
+        res.json(weather);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/weather/forecast/:city', async (req, res) => {
+    try {
+        const days = req.query.days || 5;
+        const forecast = await weatherClient.getForecast(req.params.city, days);
+        res.json(forecast);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Webhook endpoint
+app.post('/webhook/weather', (req, res) => {
+    const signature = req.headers['x-webhook-signature'];
+    
+    if (!verifyWebhookSignature(req.body, signature)) {
+        return res.status(401).json({ error: 'Invalid signature' });
+    }
+    
+    // Process webhook event
+    const event = req.body;
+    console.log('Received webhook:', event.event);
+    
+    // Handle different event types
+    switch(event.event) {
+        case 'weather.alert.created':
+            handleWeatherAlert(event.data);
+            break;
+        // ... other cases
+    }
+    
+    res.json({ received: true });
+});
+
+// Start server
+app.listen(PORT, () => {
+    console.log(`Weather API server running on port ${PORT}`);
+});</code></pre>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2025 API Docs Masterclass | <a href="../index.html">Home</a> | <a href="https://github.com/api-tech-writer/API-Docs-Masterclass" target="_blank">GitHub</a></p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <script src="../js/scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The ultimate showcase for API documentation engineering skills - comprehensive guides, references, and best practices">
+    <meta name="keywords" content="API, documentation, REST, GraphQL, technical writing, developer docs">
+    <meta name="author" content="API Documentation Team">
+    
+    <title>API Docs Masterclass - The Ultimate API Documentation Showcase</title>
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="API Docs Masterclass">
+    <meta property="og:description" content="The ultimate showcase for API documentation engineering skills">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://api-tech-writer.github.io/API-Docs-Masterclass/">
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <h1>🚀 API Docs Masterclass</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">🏠 Home</a></li>
+                <li><a href="pages/reference.html">📖 Reference</a></li>
+                <li><a href="pages/guides.html">🎯 Guides</a></li>
+                <li><a href="pages/concepts.html">💡 Concepts</a></li>
+                <li><a href="pages/best-practices.html">⭐ Best Practices</a></li>
+                <li><a href="pages/case-studies.html">📊 Case Studies</a></li>
+                <li><a href="pages/examples.html">💻 Examples</a></li>
+                <li><a href="https://github.com/api-tech-writer/API-Docs-Masterclass" target="_blank">🔗 GitHub</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <h2 class="typewriter" data-text="Welcome to the Ultimate API Documentation Showcase">Welcome to the Ultimate API Documentation Showcase</h2>
+            <p>Demonstrating excellence in technical writing, API design, and developer experience</p>
+            <br>
+            <a href="pages/guides.html" class="btn">Get Started →</a>
+        </section>
+
+        <!-- Feature Cards -->
+        <section class="features">
+            <div class="card">
+                <h3>📚 Comprehensive Documentation</h3>
+                <p>Complete API reference documentation with detailed endpoints, parameters, and response schemas. Every aspect meticulously documented following industry best practices.</p>
+                <pre><code class="language-bash"># Quick example
+curl -X GET "https://api.globalweather.com/v1/weather/current?city=London" \
+  -H "Authorization: Bearer YOUR_API_KEY"</code></pre>
+                <a href="pages/reference.html">Explore Reference →</a>
+            </div>
+
+            <div class="card">
+                <h3>🎓 Step-by-Step Guides</h3>
+                <p>From zero to hero with our comprehensive guides. Learn authentication, make your first request, handle errors, and implement advanced features.</p>
+                <ul>
+                    <li>Getting Started in 5 Minutes</li>
+                    <li>Authentication Methods</li>
+                    <li>Webhook Implementation</li>
+                    <li>Error Handling Strategies</li>
+                </ul>
+                <a href="pages/guides.html">View Guides →</a>
+            </div>
+
+            <div class="card">
+                <h3>🏗️ Architecture & Concepts</h3>
+                <p>Deep dive into API architecture patterns, RESTful design principles, GraphQL schemas, and modern API development concepts.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pattern</th>
+                            <th>Use Case</th>
+                            <th>Complexity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>REST</td>
+                            <td>CRUD Operations</td>
+                            <td>⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td>GraphQL</td>
+                            <td>Complex Queries</td>
+                            <td>⭐⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td>gRPC</td>
+                            <td>Microservices</td>
+                            <td>⭐⭐⭐⭐</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a href="pages/concepts.html">Learn Concepts →</a>
+            </div>
+
+            <div class="card">
+                <h3>✨ Best Practices</h3>
+                <p>Industry-leading standards for API documentation, including style guides, writing principles, and documentation patterns that scale.</p>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0;">
+                    <code>Clarity</code>
+                    <code>Consistency</code>
+                    <code>Completeness</code>
+                    <code>Usability</code>
+                </div>
+                <a href="pages/best-practices.html">Read Best Practices →</a>
+            </div>
+
+            <div class="card">
+                <h3>📊 Real-World Case Studies</h3>
+                <p>Learn from the best - detailed analysis of how companies like Stripe, Twilio, and GitHub approach API documentation.</p>
+                <blockquote style="border-left: 3px solid var(--neon-green); padding-left: 1rem; margin: 1rem 0;">
+                    "Stripe's documentation is so good, I learned how to code better by reading it." - Developer
+                </blockquote>
+                <a href="pages/case-studies.html">Explore Case Studies →</a>
+            </div>
+
+            <div class="card">
+                <h3>💻 Code Examples</h3>
+                <p>Production-ready code examples in multiple languages with error handling, best practices, and real-world patterns.</p>
+                <pre><code class="language-python"># Python Example
+import requests
+
+client = WeatherClient('your_api_key')
+weather = client.get_current_weather('London')
+print(f"Temperature: {weather['temperature']}°C")</code></pre>
+                <a href="pages/examples.html">View Examples →</a>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats" style="text-align: center; margin: 3rem 0;">
+            <h2 style="color: var(--neon-blue); margin-bottom: 2rem;">📈 Repository Statistics</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+                <div class="card" style="text-align: center;">
+                    <h3 style="color: var(--neon-purple);">11,500+</h3>
+                    <p>Lines of Documentation</p>
+                </div>
+                <div class="card" style="text-align: center;">
+                    <h3 style="color: var(--neon-purple);">8+</h3>
+                    <p>Programming Languages</p>
+                </div>
+                <div class="card" style="text-align: center;">
+                    <h3 style="color: var(--neon-purple);">50+</h3>
+                    <p>Code Examples</p>
+                </div>
+                <div class="card" style="text-align: center;">
+                    <h3 style="color: var(--neon-purple);">100%</h3>
+                    <p>Best Practices</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technologies -->
+        <section class="technologies">
+            <h2 style="text-align: center; color: var(--neon-green); margin-bottom: 2rem;">🛠️ Technologies & Tools</h2>
+            <div class="card">
+                <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
+                    <code>OpenAPI 3.0</code>
+                    <code>MkDocs</code>
+                    <code>Swagger UI</code>
+                    <code>Postman</code>
+                    <code>GitHub Actions</code>
+                    <code>Python</code>
+                    <code>JavaScript</code>
+                    <code>REST</code>
+                    <code>GraphQL</code>
+                    <code>Webhooks</code>
+                    <code>CI/CD</code>
+                    <code>Git</code>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta" style="text-align: center; margin: 4rem 0;">
+            <h2 style="color: var(--neon-blue);">Ready to Master API Documentation?</h2>
+            <p style="font-size: 1.2rem; margin: 1rem 0;">Explore our comprehensive resources and level up your technical writing skills</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+                <a href="pages/guides.html" class="btn">Start Learning</a>
+                <a href="https://github.com/api-tech-writer/API-Docs-Masterclass" class="btn" target="_blank">View on GitHub</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 API Docs Masterclass | Built with ❤️ for the developer community</p>
+        <p>
+            <a href="https://github.com/api-tech-writer/API-Docs-Masterclass" target="_blank">GitHub</a> |
+            <a href="https://github.com/api-tech-writer/API-Docs-Masterclass/issues" target="_blank">Issues</a> |
+            <a href="https://github.com/api-tech-writer/API-Docs-Masterclass/blob/main/LICENSE" target="_blank">License</a>
+        </p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+    <script src="js/scripts.js"></script>
+</body>
+</html>
