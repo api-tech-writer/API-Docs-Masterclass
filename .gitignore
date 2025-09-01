@@ -1,0 +1,198 @@
+# Dependencies
+node_modules/
+venv/
+env/
+*.pyc
+__pycache__/
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Build outputs
+site/
+dist/
+build/
+*.egg-info/
+.eggs/
+htmlcov/
+.coverage
+.pytest_cache/
+.tox/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# API keys and secrets
+*.key
+*.pem
+*.crt
+secrets/
+credentials/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.nyc_output/
+junit.xml
+test-results/
+
+# Documentation build
+mkdocs-material/
+.cache/
+public/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+
+# Package files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# Python
+*.py[cod]
+*$py.class
+*.so
+.python-version
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+
+# JavaScript/Node
+npm-debug.log
+yarn-error.log
+.npm
+.eslintcache
+.node_repl_history
+*.tsbuildinfo
+.yarn-integrity
+
+# Documentation specific
+_build/
+_static/
+_templates/
+.doctrees/
+.buildinfo
+
+# MkDocs
+site/
+mkdocs.yml.backup
+
+# Swagger/OpenAPI
+.swagger-codegen/
+.openapi-generator/
+
+# Postman
+*.postman_collection.json.backup
+*.postman_environment.json.backup
+
+# Local development
+local/
+scratch/
+playground/
+sandbox/
+
+# CI/CD
+.github/workflows/*.backup
+.gitlab-ci.yml.backup
+.travis.yml.backup
+
+# Terraform (if used for infrastructure)
+*.tfstate
+*.tfstate.*
+.terraform/
+terraform.tfvars
+
+# Docker
+.dockerignore.backup
+docker-compose.override.yml
+
+# Sensitive data
+data/
+private/
+confidential/
+*.secret
+
+# Archive files
+archive/
+old/
+deprecated/
+
+# Generated files
+auto-generated/
+generated/
+gen/
+
+# Cache
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+.vuepress/dist/
+.serverless/
+.fusebox/
+.dynamodb/
+
+# Debugging
+.vscode/launch.json
+.vscode/tasks.json
+debug/
+*.debug
+
+# Backup files
+backup/
+backups/
+*.backup
+*.bk
+
+# Lock files (optional - uncomment if you don't want to track)
+# package-lock.json
+# yarn.lock
+# Gemfile.lock
+# poetry.lock
+# composer.lock

@@ -1,0 +1,909 @@
+openapi: 3.0.3
+info:
+  title: Global Weather Service API
+  description: |
+    The Global Weather Service API provides comprehensive weather data including current conditions,
+    forecasts, historical data, and severe weather alerts. This API serves millions of requests daily
+    and powers weather applications worldwide.
+    
+    ## Features
+    - Real-time weather conditions
+    - 7-day forecasts
+    - Historical weather data
+    - Severe weather alerts
+    - Location search
+    - Webhook subscriptions
+    
+    ## Authentication
+    All endpoints require API key authentication. Get your API key at https://dashboard.globalweather.com
+  version: 1.0.0
+  termsOfService: https://globalweather.com/terms
+  contact:
+    name: API Support
+    email: api-support@globalweather.com
+    url: https://support.globalweather.com
+  license:
+    name: Commercial License
+    url: https://globalweather.com/license
+  x-logo:
+    url: https://globalweather.com/logo.png
+    altText: Global Weather Service
+
+servers:
+  - url: https://api.globalweather.com/v1
+    description: Production server
+  - url: https://sandbox.globalweather.com/v1
+    description: Sandbox server for testing
+
+security:
+  - ApiKeyAuth: []
+
+tags:
+  - name: Weather
+    description: Weather data operations
+    externalDocs:
+      description: Weather API Guide
+      url: https://docs.globalweather.com/weather
+  - name: Locations
+    description: Location search and management
+  - name: Alerts
+    description: Weather alerts and warnings
+  - name: Webhooks
+    description: Webhook subscriptions
+  - name: Account
+    description: Account management
+
+paths:
+  /weather/current:
+    get:
+      tags:
+        - Weather
+      summary: Get current weather
+      description: Returns current weather conditions for a specified location
+      operationId: getCurrentWeather
+      parameters:
+        - name: city
+          in: query
+          description: City name (e.g., London, New York)
+          schema:
+            type: string
+            example: London
+        - name: lat
+          in: query
+          description: Latitude coordinate
+          schema:
+            type: number
+            format: float
+            minimum: -90
+            maximum: 90
+            example: 51.5074
+        - name: lon
+          in: query
+          description: Longitude coordinate
+          schema:
+            type: number
+            format: float
+            minimum: -180
+            maximum: 180
+            example: -0.1278
+        - name: units
+          in: query
+          description: Units for temperature
+          schema:
+            type: string
+            enum: [metric, imperial, kelvin]
+            default: metric
+        - name: lang
+          in: query
+          description: Language code (ISO 639-1)
+          schema:
+            type: string
+            pattern: '^[a-z]{2}$'
+            example: en
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentWeatherResponse'
+              examples:
+                london:
+                  summary: London weather
+                  value:
+                    location:
+                      city: London
+                      country: GB
+                      coordinates:
+                        lat: 51.5074
+                        lon: -0.1278
+                    current:
+                      temperature: 15.5
+                      feels_like: 14.2
+                      humidity: 72
+                      weather:
+                        main: Clouds
+                        description: scattered clouds
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-code-samples:
+        - lang: curl
+          source: |
+            curl -X GET "https://api.globalweather.com/v1/weather/current?city=London" \
+              -H "Authorization: Bearer YOUR_API_KEY"
+        - lang: Python
+          source: |
+            import requests
+            
+            response = requests.get(
+                "https://api.globalweather.com/v1/weather/current",
+                params={"city": "London"},
+                headers={"Authorization": "Bearer YOUR_API_KEY"}
+            )
+            print(response.json())
+        - lang: JavaScript
+          source: |
+            fetch('https://api.globalweather.com/v1/weather/current?city=London', {
+              headers: {
+                'Authorization': 'Bearer YOUR_API_KEY'
+              }
+            })
+            .then(response => response.json())
+            .then(data => console.log(data));
+
+  /weather/forecast:
+    get:
+      tags:
+        - Weather
+      summary: Get weather forecast
+      description: Returns weather forecast for up to 7 days
+      operationId: getWeatherForecast
+      parameters:
+        - name: city
+          in: query
+          schema:
+            type: string
+        - name: lat
+          in: query
+          schema:
+            type: number
+            format: float
+        - name: lon
+          in: query
+          schema:
+            type: number
+            format: float
+        - name: days
+          in: query
+          description: Number of days to forecast (1-7)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 7
+            default: 5
+        - name: units
+          in: query
+          schema:
+            type: string
+            enum: [metric, imperial, kelvin]
+            default: metric
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForecastResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+
+  /weather/historical:
+    get:
+      tags:
+        - Weather
+      summary: Get historical weather
+      description: Returns historical weather data for a specific date
+      operationId: getHistoricalWeather
+      parameters:
+        - name: city
+          in: query
+          schema:
+            type: string
+        - name: lat
+          in: query
+          schema:
+            type: number
+            format: float
+        - name: lon
+          in: query
+          schema:
+            type: number
+            format: float
+        - name: date
+          in: query
+          required: true
+          description: Date in YYYY-MM-DD format
+          schema:
+            type: string
+            format: date
+            example: '2024-12-25'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoricalWeatherResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /weather/alerts:
+    get:
+      tags:
+        - Alerts
+      summary: Get weather alerts
+      description: Returns active weather alerts for a location
+      operationId: getWeatherAlerts
+      parameters:
+        - name: city
+          in: query
+          schema:
+            type: string
+        - name: lat
+          in: query
+          schema:
+            type: number
+            format: float
+        - name: lon
+          in: query
+          schema:
+            type: number
+            format: float
+        - name: severity
+          in: query
+          description: Filter by alert severity
+          schema:
+            type: string
+            enum: [minor, moderate, severe, extreme]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /locations/search:
+    get:
+      tags:
+        - Locations
+      summary: Search locations
+      description: Search for locations to get weather data
+      operationId: searchLocations
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Search query
+          schema:
+            type: string
+            minLength: 2
+            example: New York
+        - name: limit
+          in: query
+          description: Maximum number of results
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 10
+            default: 5
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationSearchResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /webhooks:
+    get:
+      tags:
+        - Webhooks
+      summary: List webhooks
+      description: Returns all configured webhooks for the account
+      operationId: listWebhooks
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhooks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    
+    post:
+      tags:
+        - Webhooks
+      summary: Create webhook
+      description: Creates a new webhook subscription
+      operationId: createWebhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookCreate'
+      responses:
+        '201':
+          description: Webhook created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /webhooks/{webhookId}:
+    delete:
+      tags:
+        - Webhooks
+      summary: Delete webhook
+      description: Deletes a webhook subscription
+      operationId: deleteWebhook
+      parameters:
+        - name: webhookId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Webhook deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /auth/verify:
+    get:
+      tags:
+        - Account
+      summary: Verify authentication
+      description: Verifies API key and returns account information
+      operationId: verifyAuth
+      responses:
+        '200':
+          description: Authentication valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthVerifyResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Format: Bearer YOUR_API_KEY'
+    
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://auth.globalweather.com/oauth/authorize
+          tokenUrl: https://auth.globalweather.com/oauth/token
+          scopes:
+            read:weather: Read weather data
+            write:alerts: Create custom alerts
+            read:historical: Access historical data
+            write:webhooks: Manage webhooks
+
+  schemas:
+    CurrentWeatherResponse:
+      type: object
+      required:
+        - location
+        - current
+      properties:
+        location:
+          $ref: '#/components/schemas/Location'
+        current:
+          $ref: '#/components/schemas/CurrentWeather'
+    
+    ForecastResponse:
+      type: object
+      required:
+        - location
+        - forecast
+      properties:
+        location:
+          $ref: '#/components/schemas/Location'
+        forecast:
+          type: array
+          items:
+            $ref: '#/components/schemas/ForecastDay'
+    
+    HistoricalWeatherResponse:
+      type: object
+      required:
+        - location
+        - date
+        - historical
+      properties:
+        location:
+          $ref: '#/components/schemas/Location'
+        date:
+          type: string
+          format: date
+        historical:
+          $ref: '#/components/schemas/HistoricalData'
+    
+    AlertsResponse:
+      type: object
+      required:
+        - location
+        - alerts
+        - count
+      properties:
+        location:
+          $ref: '#/components/schemas/Location'
+        alerts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alert'
+        count:
+          type: integer
+    
+    LocationSearchResponse:
+      type: object
+      required:
+        - results
+        - count
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationResult'
+        count:
+          type: integer
+    
+    Location:
+      type: object
+      required:
+        - city
+        - country
+      properties:
+        city:
+          type: string
+        country:
+          type: string
+        state:
+          type: string
+        coordinates:
+          type: object
+          properties:
+            lat:
+              type: number
+              format: float
+            lon:
+              type: number
+              format: float
+        timezone:
+          type: string
+    
+    CurrentWeather:
+      type: object
+      required:
+        - timestamp
+        - temperature
+        - humidity
+        - weather
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        temperature:
+          type: number
+          format: float
+        feels_like:
+          type: number
+          format: float
+        humidity:
+          type: integer
+        pressure:
+          type: integer
+        visibility:
+          type: integer
+        wind:
+          $ref: '#/components/schemas/Wind'
+        clouds:
+          $ref: '#/components/schemas/Clouds'
+        weather:
+          $ref: '#/components/schemas/WeatherCondition'
+        uv_index:
+          type: number
+        air_quality:
+          $ref: '#/components/schemas/AirQuality'
+    
+    ForecastDay:
+      type: object
+      required:
+        - date
+        - temperature
+        - weather
+      properties:
+        date:
+          type: string
+          format: date
+        temperature:
+          type: object
+          properties:
+            min:
+              type: number
+            max:
+              type: number
+            morning:
+              type: number
+            day:
+              type: number
+            evening:
+              type: number
+            night:
+              type: number
+        humidity:
+          type: integer
+        wind:
+          $ref: '#/components/schemas/Wind'
+        weather:
+          $ref: '#/components/schemas/WeatherCondition'
+        precipitation:
+          type: object
+          properties:
+            probability:
+              type: number
+            volume:
+              type: number
+        uv_index:
+          type: number
+    
+    HistoricalData:
+      type: object
+      properties:
+        temperature:
+          type: object
+          properties:
+            min:
+              type: number
+            max:
+              type: number
+            average:
+              type: number
+        humidity:
+          type: object
+          properties:
+            min:
+              type: integer
+            max:
+              type: integer
+            average:
+              type: integer
+        precipitation:
+          type: object
+          properties:
+            total:
+              type: number
+            hours:
+              type: integer
+    
+    Alert:
+      type: object
+      required:
+        - id
+        - type
+        - severity
+        - title
+        - description
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        severity:
+          type: string
+          enum: [minor, moderate, severe, extreme]
+        title:
+          type: string
+        description:
+          type: string
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        areas:
+          type: array
+          items:
+            type: string
+        instructions:
+          type: string
+        source:
+          type: string
+    
+    LocationResult:
+      type: object
+      required:
+        - id
+        - name
+        - country
+        - coordinates
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        coordinates:
+          type: object
+          properties:
+            lat:
+              type: number
+            lon:
+              type: number
+    
+    Wind:
+      type: object
+      properties:
+        speed:
+          type: number
+        direction:
+          type: integer
+          minimum: 0
+          maximum: 360
+        gust:
+          type: number
+    
+    Clouds:
+      type: object
+      properties:
+        coverage:
+          type: integer
+          minimum: 0
+          maximum: 100
+        description:
+          type: string
+    
+    WeatherCondition:
+      type: object
+      required:
+        - id
+        - main
+        - description
+      properties:
+        id:
+          type: integer
+        main:
+          type: string
+        description:
+          type: string
+        icon:
+          type: string
+    
+    AirQuality:
+      type: object
+      properties:
+        aqi:
+          type: integer
+        category:
+          type: string
+          enum: [Good, Moderate, Unhealthy for Sensitive Groups, Unhealthy, Very Unhealthy, Hazardous]
+    
+    Webhook:
+      type: object
+      required:
+        - id
+        - url
+        - events
+        - created_at
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            type: string
+        active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        last_triggered:
+          type: string
+          format: date-time
+    
+    WebhookCreate:
+      type: object
+      required:
+        - url
+        - events
+      properties:
+        url:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            type: string
+            enum:
+              - weather.alert.created
+              - weather.alert.updated
+              - weather.alert.cancelled
+              - weather.threshold.exceeded
+        secret:
+          type: string
+          description: Secret for webhook signature verification
+    
+    AuthVerifyResponse:
+      type: object
+      required:
+        - valid
+        - key_type
+        - permissions
+        - rate_limit
+        - account
+      properties:
+        valid:
+          type: boolean
+        key_type:
+          type: string
+          enum: [live, test, restricted]
+        permissions:
+          type: array
+          items:
+            type: string
+        rate_limit:
+          type: object
+          properties:
+            limit:
+              type: integer
+            remaining:
+              type: integer
+            reset:
+              type: string
+              format: date-time
+        account:
+          type: object
+          properties:
+            id:
+              type: string
+            plan:
+              type: string
+            email:
+              type: string
+              format: email
+    
+    Error:
+      type: object
+      required:
+        - error
+        - timestamp
+        - request_id
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+        timestamp:
+          type: string
+          format: date-time
+        request_id:
+          type: string
+
+  responses:
+    BadRequest:
+      description: Bad request - Invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    
+    Unauthorized:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    
+    NotFound:
+      description: Not found - Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    
+    TooManyRequests:
+      description: Too many requests - Rate limit exceeded
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  examples:
+    LondonWeather:
+      summary: London current weather
+      value:
+        location:
+          city: London
+          country: GB
+          coordinates:
+            lat: 51.5074
+            lon: -0.1278
+        current:
+          temperature: 15.5
+          feels_like: 14.2
+          humidity: 72
+          weather:
+            main: Clouds
+            description: scattered clouds

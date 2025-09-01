@@ -1,0 +1,193 @@
+{
+  "name": "api-docs-masterclass",
+  "version": "1.0.0",
+  "description": "The ultimate showcase for API documentation engineering skills",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run lint && npm run validate",
+    "lint": "npm run lint:markdown && npm run lint:yaml",
+    "lint:markdown": "markdownlint '**/*.md' --ignore node_modules --ignore site",
+    "lint:yaml": "yamllint **/*.{yml,yaml}",
+    "validate": "npm run validate:openapi && npm run validate:asyncapi",
+    "validate:openapi": "swagger-cli validate specs/openapi.yaml",
+    "validate:asyncapi": "asyncapi validate specs/asyncapi.yaml || true",
+    "check:links": "markdown-link-check **/*.md",
+    "check:spelling": "cspell '**/*.{md,yml,yaml,json,js,py}'",
+    "format": "prettier --write '**/*.{md,json,yml,yaml,js}'",
+    "format:check": "prettier --check '**/*.{md,json,yml,yaml,js}'",
+    "docs:serve": "mkdocs serve",
+    "docs:build": "mkdocs build",
+    "docs:deploy": "mkdocs gh-deploy",
+    "postman:validate": "newman run tools/postman/collection.json",
+    "api:mock": "prism mock specs/openapi.yaml",
+    "api:test": "dredd specs/openapi.yaml http://localhost:3000",
+    "examples:test": "npm run examples:test:js && npm run examples:test:python",
+    "examples:test:js": "node examples/javascript/weatherClient.js",
+    "examples:test:python": "python examples/python/weather_client.py",
+    "security:scan": "snyk test",
+    "clean": "rm -rf site/ node_modules/ .cache/ coverage/",
+    "prepare": "husky install",
+    "pre-commit": "lint-staged"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ap-itech-writer/API-Docs-Masterclass.git"
+  },
+  "keywords": [
+    "api",
+    "documentation",
+    "openapi",
+    "swagger",
+    "rest",
+    "graphql",
+    "technical-writing",
+    "developer-experience",
+    "mkdocs",
+    "api-docs"
+  ],
+  "author": "API Documentation Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ap-itech-writer/API-Docs-Masterclass/issues"
+  },
+  "homepage": "https://github.com/ap-itech-writer/API-Docs-Masterclass#readme",
+  "devDependencies": {
+    "@apidevtools/swagger-cli": "^4.0.4",
+    "@asyncapi/cli": "^1.2.0",
+    "@redocly/cli": "^1.0.0",
+    "@stoplight/prism-cli": "^5.5.0",
+    "@stoplight/spectral-cli": "^6.11.0",
+    "cspell": "^8.3.0",
+    "dredd": "^14.1.0",
+    "eslint": "^8.56.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "markdown-link-check": "^3.11.2",
+    "markdownlint-cli": "^0.38.0",
+    "newman": "^6.1.0",
+    "prettier": "^3.1.1",
+    "snyk": "^1.1269.0",
+    "swagger-ui-dist": "^5.10.5",
+    "yaml-lint": "^1.7.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "node-fetch": "^3.3.2",
+    "retry-axios": "^3.1.0",
+    "winston": "^3.11.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "lint-staged": {
+    "*.md": [
+      "markdownlint --fix",
+      "prettier --write"
+    ],
+    "*.{json,yml,yaml}": [
+      "prettier --write"
+    ],
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.py": [
+      "black",
+      "flake8"
+    ]
+  },
+  "prettier": {
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5",
+    "printWidth": 100,
+    "proseWrap": "preserve"
+  },
+  "markdownlint": {
+    "default": true,
+    "MD013": false,
+    "MD033": false,
+    "MD041": false
+  },
+  "cspell": {
+    "version": "0.2",
+    "language": "en",
+    "words": [
+      "openapi",
+      "asyncapi",
+      "graphql",
+      "grpc",
+      "protobuf",
+      "webhook",
+      "webhooks",
+      "mkdocs",
+      "redoc",
+      "swagger",
+      "postman",
+      "insomnia",
+      "prism",
+      "spectral",
+      "redocly",
+      "stoplight",
+      "apidevtools",
+      "globalweather",
+      "weatherapi",
+      "datetime",
+      "timestamp",
+      "metadata",
+      "endpoint",
+      "endpoints",
+      "auth",
+      "oauth",
+      "cors",
+      "csrf",
+      "hmac",
+      "jwt",
+      "uuid",
+      "uuids",
+      "enum",
+      "enums",
+      "boolean",
+      "booleans",
+      "nullable",
+      "charset",
+      "utf8",
+      "ascii",
+      "base64",
+      "gzip",
+      "deflate",
+      "multipart",
+      "urlencoded",
+      "querystring",
+      "middleware",
+      "middlewares",
+      "lifecycle",
+      "idempotent",
+      "idempotency",
+      "pagination",
+      "paginate",
+      "serializer",
+      "deserializer",
+      "marshalling",
+      "unmarshalling",
+      "stringify",
+      "parse",
+      "validator",
+      "validators",
+      "sanitizer",
+      "sanitizers"
+    ],
+    "ignorePaths": [
+      "node_modules",
+      "site",
+      ".git",
+      "coverage",
+      "*.log"
+    ]
+  }
+}

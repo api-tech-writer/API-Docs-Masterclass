@@ -1,0 +1,293 @@
+site_name: API Docs Masterclass
+site_description: The ultimate showcase for API documentation engineering skills
+site_author: API Documentation Team
+site_url: https://api-docs-masterclass.github.io
+repo_url: https://github.com/ap-itech-writer/API-Docs-Masterclass
+repo_name: API-Docs-Masterclass
+edit_uri: edit/main/docs/
+copyright: Copyright &copy; 2025 API Docs Masterclass
+
+# Navigation
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Quick Start: guides/getting-started.md
+    - Authentication: reference/authentication.md
+    - Your First Request: guides/getting-started.md#your-first-api-call
+  - API Reference:
+    - Overview: reference/index.md
+    - Authentication: reference/authentication.md
+    - Weather Endpoints: reference/weather.md
+    - Webhooks: guides/webhooks.md
+    - Rate Limiting: reference/rate-limiting.md
+    - Error Codes: reference/errors.md
+  - Guides:
+    - Getting Started: guides/getting-started.md
+    - Webhooks: guides/webhooks.md
+    - Migration Guide: guides/migration.md
+    - Best Practices: best-practices/index.md
+  - Concepts:
+    - API Architecture: concepts/api-architecture.md
+    - RESTful Design: concepts/rest-principles.md
+    - Security: concepts/security.md
+    - Versioning: concepts/versioning.md
+  - SDKs & Libraries:
+    - Python: sdks/python.md
+    - JavaScript/Node.js: sdks/javascript.md
+    - Java: sdks/java.md
+    - Go: sdks/go.md
+    - Ruby: sdks/ruby.md
+    - PHP: sdks/php.md
+  - Examples:
+    - Code Samples: examples/index.md
+    - Use Cases: examples/use-cases.md
+    - Recipes: examples/recipes.md
+  - Best Practices:
+    - Style Guide: best-practices/style-guide.md
+    - API Design: best-practices/api-design.md
+    - Documentation: best-practices/documentation.md
+    - Security: best-practices/security.md
+  - Case Studies:
+    - Stripe Analysis: case-studies/stripe-analysis.md
+    - Twilio Docs: case-studies/twilio.md
+    - GitHub API: case-studies/github.md
+  - Resources:
+    - OpenAPI Spec: specs/openapi.md
+    - Postman Collection: tools/postman.md
+    - Changelog: changelog.md
+    - Support: support.md
+
+# Theme Configuration
+theme:
+  name: material
+  custom_dir: overrides
+  language: en
+  
+  # Color scheme
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  
+  # Font
+  font:
+    text: Roboto
+    code: Roboto Mono
+  
+  # Logo and favicon
+  logo: assets/logo.svg
+  favicon: assets/favicon.png
+  
+  # Features
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.prune
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - toc.follow
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+    - search.share
+    - header.autohide
+    - announce.dismiss
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - content.tabs.link
+    - content.tooltips
+
+# Plugins
+plugins:
+  - search:
+      separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+      lang:
+        - en
+  - minify:
+      minify_html: true
+      minify_js: true
+      minify_css: true
+      htmlmin_opts:
+        remove_comments: true
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: timeago
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: true
+  - swagger-ui-tag:
+      supportedSubmitMethods: []
+      validatorUrl: ""
+  - redirects:
+      redirect_maps:
+        'getting-started.md': 'guides/getting-started.md'
+  - tags:
+      tags_file: tags.md
+  - social:
+      cards: true
+      cards_color:
+        fill: "#0FF1CE"
+        text: "#FFFFFF"
+  - print-site:
+      add_to_navigation: true
+      print_page_title: 'Print Documentation'
+      add_print_site_banner: true
+  - awesome-pages
+  - macros:
+      include_dir: includes
+  - pdf-export:
+      verbose: true
+      media_type: print
+      enabled_if_env: ENABLE_PDF_EXPORT
+
+# Extensions
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      use_pygments: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - pymdownx.snippets:
+      base_path: docs
+      check_paths: true
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: ap-itech-writer
+      repo: API-Docs-Masterclass
+
+# Extra CSS and JavaScript
+extra_css:
+  - stylesheets/extra.css
+  - https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.css
+
+extra_javascript:
+  - javascripts/extra.js
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.js
+  - https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.js
+
+# Extra Configuration
+extra:
+  version:
+    provider: mike
+    default: latest
+  
+  # Social links
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/ap-itech-writer/API-Docs-Masterclass
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/apidocs
+    - icon: fontawesome/brands/linkedin
+      link: https://linkedin.com/company/api-docs
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/api-docs
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/r/apidocs/weather-api
+  
+  # Analytics
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+    feedback:
+      title: Was this page helpful?
+      ratings:
+        - icon: material/emoticon-happy-outline
+          name: This page was helpful
+          data: 1
+          note: >-
+            Thanks for your feedback!
+        - icon: material/emoticon-sad-outline
+          name: This page could be improved
+          data: 0
+          note: >-
+            Thanks for your feedback! Help us improve by
+            <a href="https://github.com/ap-itech-writer/API-Docs-Masterclass/issues/new/?title=[Feedback]+{title}&body=Path:%20{url}%0A%0AYour%20feedback:%0A" target="_blank" rel="noopener">filing an issue</a>.
+  
+  # Consent
+  consent:
+    title: Cookie consent
+    description: >-
+      We use cookies to recognize your repeated visits and preferences, as well
+      as to measure the effectiveness of our documentation and whether users
+      find what they're searching for. With your consent, you're helping us to
+      make our documentation better.
+    actions:
+      - accept
+      - reject
+      - manage
+  
+  # Tags
+  tags:
+    API: api
+    REST: rest
+    GraphQL: graphql
+    Authentication: auth
+    Webhooks: webhooks
+    Security: security
+    Best Practices: best-practices
+    Examples: examples
+  
+  # Generator
+  generator: false
+
+# Watch for changes
+watch:
+  - docs
+  - mkdocs.yml
+  - overrides
